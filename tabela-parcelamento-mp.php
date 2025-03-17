@@ -3,12 +3,12 @@
  * Plugin Name: Tabela de Parcelamento Mercado Pago
  * Plugin URI: https://renatofroes.com.br/tabela-parcelamento-mercado-pago
  * Description: Exibe automaticamente uma tabela de parcelamento do Mercado Pago na página do produto do WooCommerce.
- * Version: 1.0.1.1
+ * Version: 1.0.2
  * Author: Renato Froes
  * Author URI: https://renatofroes.com.br
  * License: GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: tabela-parcelamento-mp
+ * Text Domain: tabela-de-parcelamento-mercado-pago
  */
 
 if (!defined('ABSPATH')) {
@@ -142,13 +142,13 @@ function carregar_estilos_parcelamento() {
 }
 add_action('wp_enqueue_scripts', 'carregar_estilos_parcelamento');
 
-// ✅ Adiciona opções de configuração no painel do WordPress
-function configuracao_parcelamento_mp_opcoes() {
-    register_setting('parcelamento_mp_settings', 'parcelamento_mp_posicao');
-}
-
+// ✅ Salva as configurações do plugin
 function salvar_configuracoes_parcelamento_mp() {
-    register_setting('parcelamento_mp_settings', 'parcelamento_mp_posicao');
-    register_setting('parcelamento_mp_settings', 'parcelamento_mp_token');
+    register_setting('parcelamento_mp_settings', 'parcelamento_mp_posicao', array(
+        'sanitize_callback' => 'sanitize_text_field'
+    ));
+    register_setting('parcelamento_mp_settings', 'parcelamento_mp_token', array(
+        'sanitize_callback' => 'sanitize_text_field'
+    ));
 }
 add_action('admin_init', 'salvar_configuracoes_parcelamento_mp');
