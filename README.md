@@ -21,6 +21,6 @@
 (Adicione imagens das configurações e da tabela na página do produto)
 
 ## 🛠️ Suporte e Contribuição
-Se precisar de ajuda, visite [seu site ou repositório do GitHub].
+Se precisar de ajuda, visite https://renatofroes.com.br.
 
 ---# tabela-parcelamento-mp
