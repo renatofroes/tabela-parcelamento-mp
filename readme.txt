@@ -1,4 +1,4 @@
-=== Tabela de Parcelamento Mercado Pago ===
+=== Tabela de Parcelamento para WooCommerce ===
 Contributors: renatofroes  
 Tags: woocommerce, parcelamento, mercado pago, pagamentos  
 Requires at least: 5.0  
@@ -9,7 +9,7 @@ License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
 == Descrição ==  
-Exibe automaticamente uma tabela de parcelamento do Mercado Pago na página do produto do WooCommerce.
+Exibe automaticamente uma tabela de parcelamento com base nas condições de pagamento via Mercado Pago (utilizando a API pública), diretamente na página do produto do WooCommerce.
 
 == Instalação ==  
 1. Baixe o plugin no WordPress.org.  
@@ -25,4 +25,4 @@ Exibe automaticamente uma tabela de parcelamento do Mercado Pago na página do p
 * Versão inicial do plugin.  
 
 == Suporte ==  
-Para suporte e contribuições, acesse: https://renatofroes.com.br/tabela-parcelamento-mp  
+Para suporte e contribuições, acesse: https://renatofroes.com.br/contatos  

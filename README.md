@@ -1,4 +1,4 @@
-# 📌 Tabela de Parcelamento Mercado Pago
+# 📌 Tabela de Parcelamento para Woocommerce
 
 **Exibe automaticamente uma tabela de parcelamento do Mercado Pago na página do produto do WooCommerce.**
 

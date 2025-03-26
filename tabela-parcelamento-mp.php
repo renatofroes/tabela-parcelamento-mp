@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: Tabela de Parcelamento Mercado Pago
- * Plugin URI: https://renatofroes.com.br/tabela-parcelamento-mercado-pago
- * Description: Exibe automaticamente uma tabela de parcelamento do Mercado Pago na página do produto do WooCommerce.
+ * Plugin URI: https://renatofroes.com.br/tabela-parcelamento-woocommerce
+ * Description: Exibe automaticamente uma tabela de parcelamento com base nas condições de pagamento via Mercado Pago (utilizando a API pública), diretamente na página do produto do WooCommerce.
  * Version: 1.0.2
  * Author: Renato Froes
  * Author URI: https://renatofroes.com.br
  * License: GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: tabela-de-parcelamento-mercado-pago
+ * Text Domain: tabela-de-parcelamento-woocommerce
  */
 
 if (!defined('ABSPATH')) {
