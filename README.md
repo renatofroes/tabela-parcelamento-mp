@@ -1,4 +1,4 @@
-# 📌 Tabela de Parcelamento para Woocommerce
+# 📌 Simulador de Parcelas para Loja Virtual
 
 **Exibe automaticamente uma tabela de parcelamento do Mercado Pago na página do produto do WooCommerce.**
 
@@ -6,6 +6,23 @@
 - Obtém automaticamente as condições de parcelamento do Mercado Pago.
 - Configuração fácil no painel do WordPress.
 - Permite escolher a posição da tabela na página do produto.
+
+## 🔌 Serviços externos
+
+Este plugin se conecta à API pública do Mercado Pago para obter as condições de parcelamento com base no preço do produto.
+
+**Dados enviados:**
+- O valor do produto (`amount`)
+- Um método de pagamento fixo (ex.: `visa`)
+- O Access Token configurado pelo administrador da loja
+
+**Finalidade:**
+- Exibir opções de parcelamento em tempo real nas páginas de produto da loja.
+
+**Serviço utilizado:**
+- API de Parcelamento do Mercado Pago  
+- [Termos de uso](https://www.mercadopago.com.br/ajuda/termos-e-condicoes_194)  
+- [Política de privacidade](https://www.mercadopago.com.br/ajuda/politica-de-privacidade_188)
 
 ## 📥 Instalação
 1. Baixe o plugin no WordPress.org ou no GitHub.
@@ -23,4 +40,4 @@
 ## 🛠️ Suporte e Contribuição
 Se precisar de ajuda, visite https://renatofroes.com.br.
 
----# tabela-parcelamento-mp
+---# Simulador de Parcelas
