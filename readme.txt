@@ -4,7 +4,7 @@ Tags: woocommerce, parcelamento, mercado pago, pagamentos
 Requires at least: 5.0  
 Tested up to: 6.7  
 Requires PHP: 7.2  
-Stable tag: 1.0.2  
+Stable tag: 1.1.0
 License: GPL2  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -37,7 +37,16 @@ Serviço utilizado:
 1. Configuração do plugin no painel do WordPress.  
 2. Exibição da tabela na página do produto.  
 
-== Changelog ==  
+== Changelog ==
+= 1.1.0 =
+* NOVO: Exibe informação de parcelamento nos cards de produto (listagens/loops do WooCommerce)
+* NOVO: Opção de ativar/desativar a exibição nos cards via painel
+* NOVO: Escolha de alinhamento do texto (esquerda, centro, direita)
+* NOVO: Personalização da cor do texto com seletor nativo
+* NOVO: Personalização do prefixo da frase exibida (ex: "Até", "A partir de")
+* MELHORIA: Estilos agora aplicados dinamicamente conforme configurações
+* OTIMIZAÇÃO: Uso de cache (transients) para evitar chamadas repetidas à API do Mercado Pago
+
 = 1.0.1 =  
 * Versão inicial do plugin.  
 

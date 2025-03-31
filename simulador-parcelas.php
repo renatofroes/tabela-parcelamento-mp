@@ -3,7 +3,7 @@
  * Plugin Name: Simulador de Parcelas para Loja Virtual
  * Plugin URI: https://renatofroes.com.br/simulador-parcelas
  * Description: Exibe automaticamente uma tabela de parcelamento com base nas condições de pagamento via Mercado Pago (utilizando a API pública), diretamente na página do produto do WooCommerce.
- * Version: 1.0.2
+ * Version: 1.1.0
  * Author: Renato Froes
  * Author URI: https://renatofroes.com.br
  * License: GPL2
@@ -107,7 +107,7 @@ add_action('admin_menu', 'simuparc_config_menu');
 function simuparc_config_page() {
     ?>
     <div class="wrap">
-        <h1>Tabela de Parcelamento - Mercado Pago</h1>
+        <h1>Simulador de Parcelamento</h1>
         <form method="post" action="options.php">
             <?php settings_fields('simuparc_settings'); ?>
             <?php do_settings_sections('simuparc_settings'); ?>
@@ -129,16 +129,69 @@ function simuparc_config_page() {
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row"><label for="simuparc_exibir_em_loop">Exibir nos cards de produto</label></th>
+                    <td>
+                        <label for="simuparc_exibir_em_loop">
+                            <input type="checkbox" id="simuparc_exibir_em_loop" name="simuparc_exibir_em_loop" value="1" <?php checked(1, get_option('simuparc_exibir_em_loop', 0)); ?> />
+                            Ativar exibição do parcelamento abaixo do preço no card do produto
+                        </label>
+                    </td>
+                </tr>
+                <tr class="simuparc-alinhamento-row" style="<?php echo get_option('simuparc_exibir_em_loop') ? '' : 'display:none'; ?>">
+                    <th scope="row"><label for="simuparc_loop_alinhamento">Alinhamento da informação no card</label></th>
+                    <td>
+                        <select id="simuparc_loop_alinhamento" name="simuparc_loop_alinhamento">
+                            <option value="start" <?php selected(get_option('simuparc_loop_alinhamento'), 'start'); ?>>Esquerda</option>
+                            <option value="center" <?php selected(get_option('simuparc_loop_alinhamento'), 'center'); ?>>Centralizado</option>
+                            <option value="end" <?php selected(get_option('simuparc_loop_alinhamento'), 'end'); ?>>Direita</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="simuparc-alinhamento-row" style="<?php echo get_option('simuparc_exibir_em_loop') ? '' : 'display:none'; ?>">
+                    <th scope="row"><label for="simuparc_loop_cor_texto">Cor do texto</label></th>
+                    <td>
+                        <input type="color" id="simuparc_loop_cor_texto" name="simuparc_loop_cor_texto" value="<?php echo esc_attr(get_option('simuparc_loop_cor_texto', '#555555')); ?>" />
+                        <p class="description">Selecione uma cor para o texto exibido nos cards.</p>
+                    </td>
+                </tr>
+                <tr class="simuparc-alinhamento-row" style="<?php echo get_option('simuparc_exibir_em_loop') ? '' : 'display:none'; ?>">
+                    <th scope="row"><label for="simuparc_loop_prefixo">Prefixo da frase</label></th>
+                    <td>
+                        <input type="text" id="simuparc_loop_prefixo" name="simuparc_loop_prefixo" value="<?php echo esc_attr(get_option('simuparc_loop_prefixo', 'Até')); ?>" class="regular-text" />
+                        <p class="description">Texto que aparece antes da parcela (ex: "Até", "A partir de")</p>
+                    </td>
+                </tr>
             </table>
             <?php submit_button('Salvar Configurações'); ?>
         </form>
     </div>
+    <script>
+        document.getElementById('simuparc_exibir_em_loop').addEventListener('change', function() {
+            const display = this.checked ? '' : 'none';
+            document.querySelectorAll('.simuparc-alinhamento-row').forEach(el => {
+                el.style.display = display;
+            });
+        });
+    </script>
     <?php
 }
 
 // ✅ Carrega CSS para estilizar a tabela
 function simuparc_enqueue_styles() {
     wp_enqueue_style('simuparc-style', plugin_dir_url(__FILE__) . 'parcelamento-style.css');
+    
+    $alinhamento = get_option('simuparc_loop_alinhamento', 'start');
+    $cor_texto = get_option('simuparc_loop_cor_texto', '#555555');
+    $custom_css = "
+        .simuparc-loop-info {
+            font-size: 0.85em;
+            color: {$cor_texto};
+            margin-top: 5px;
+            text-align: {$alinhamento};
+        }
+    ";
+    wp_add_inline_style('simuparc-style', $custom_css);
 }
 add_action('wp_enqueue_scripts', 'simuparc_enqueue_styles');
 
@@ -150,5 +203,46 @@ function simuparc_register_settings() {
     register_setting('simuparc_settings', 'simuparc_token', array(
         'sanitize_callback' => 'sanitize_text_field'
     ));
+    register_setting('simuparc_settings', 'simuparc_exibir_em_loop', array(
+        'sanitize_callback' => 'rest_sanitize_boolean'
+    ));
+    register_setting('simuparc_settings', 'simuparc_loop_alinhamento', array(
+        'sanitize_callback' => 'sanitize_text_field'
+    ));
+    register_setting('simuparc_settings', 'simuparc_loop_cor_texto', array(
+        'sanitize_callback' => 'sanitize_hex_color'
+    ));
+    register_setting('simuparc_settings', 'simuparc_loop_prefixo', array(
+        'sanitize_callback' => 'sanitize_text_field'
+    ));
 }
 add_action('admin_init', 'simuparc_register_settings');
+
+// ✅ Exibe informações de parcelamento nos cards de produto
+function simuparc_exibir_info_loop() {
+    if (!get_option('simuparc_exibir_em_loop')) return;
+
+    global $product;
+    if (!$product || !$product->get_price()) return;
+
+    $product_id = $product->get_id();
+    $transient_key = "simuparc_parcelas_{$product_id}";
+    $parcelas = get_transient($transient_key);
+
+    if (!$parcelas) {
+        $parcelas = simuparc_obter_parcelamento($product->get_price());
+        if (is_array($parcelas)) {
+            set_transient($transient_key, $parcelas, 6 * HOUR_IN_SECONDS);
+        } else {
+            return;
+        }
+    }
+
+    if (is_array($parcelas) && !empty($parcelas)) {
+        $ultima = end($parcelas);
+        $prefixo = get_option('simuparc_loop_prefixo', 'Até');
+        echo '<p class="simuparc-loop-info">' . esc_html($prefixo) . ' ' . esc_html($ultima['installments']) . 'x de R$ ' . number_format($ultima['installment_amount'], 2, ',', '.') . '</p>';
+    }
+}
+add_action('woocommerce_after_shop_loop_item_title', 'simuparc_exibir_info_loop', 12);
+?>
